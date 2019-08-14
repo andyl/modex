@@ -25,8 +25,8 @@ Documentation can be generated with [ExDoc][1].
 
 ## Naming Conventions
 
-We want to extend Elixir core modules such as `Map`, `Enum`, and the like.  To
-keep module and function names distinct, we use the following naming
+With Modex we extend Elixir core modules such as `Map`, `Enum`, and the like.
+To keep module and function names distinct, we use the following naming
 conventions:
 
 1) Namespace all extended modules under `Modex`. 
@@ -43,3 +43,4 @@ can be used as follows:
 - `AltMap.retake(...)`
 - `include AltMap`
 - `retake(...)`
+

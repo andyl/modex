@@ -1,7 +1,7 @@
 defmodule Modex.AltMap do
 
   @moduledoc """
-  Utility functions for Map data structures.
+  Extended functions for Elixir's `Map` module.
   """
 
   @doc """

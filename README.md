@@ -1,10 +1,8 @@
 # Modex
 
-Module Extensions 
+Module Extensions - extended functions for Elixir core modules.
 
-Extended functions for Elixir core modules.
-
-Pull issues and requests welcome!
+Issues and pull requests welcome!
 
 ## Installation
 
@@ -25,9 +23,9 @@ Documentation can be generated with [ExDoc][1].
 
 ## Naming Conventions
 
-With Modex we extend Elixir core modules such as `Map`, `Enum`, and the like.
-To keep module and function names distinct, we use the following naming
-conventions:
+With Modex we extend Elixir core modules including `Map`, `Enum`, and the like.
+To keep extended module and function names distinct from core, we use the
+following naming conventions:
 
 1) Namespace all extended modules under `Modex`. 
 
@@ -35,9 +33,7 @@ conventions:
 
 3) Do not reuse exising function names for extended modules.
 
-For example: `Modex.AltMap.retake`
-
-can be used as follows:
+For example: `Modex.AltMap.retake` can be used as follows:
 
 - `alias Modex.AltMap`
 - `AltMap.retake(...)`

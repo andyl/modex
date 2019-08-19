@@ -62,6 +62,66 @@ defmodule Modex.AltMap do
   end
 
   @doc """
+  Like `Map.drop`, but recursively filters nested data structures.
+
+  ('redrop' == 'recursive drop')
+
+  Use this function to extract sub-elements from a hierarchical data structure.
+
+  For example, when you do an Ecto query using a schema and preloaded
+  associations, you can use this function to select sub-elements from the
+  parent element and it's children.
+
+  Examples:
+
+  # simple case works just like Map.take 
+  iex> redrop(%{a: 1, b: 2}, [:a])
+  %{b: 2}
+  
+  # with nested sub-maps
+  iex> redrop(%{a: 1, b: 2, c: %{x: 1, y: 2}}, [:a, c: [:x]])
+  %{b: 2, c: %{y: 2}}
+  
+  # with lists of maps
+  iex> redrop([%{a: 1, b: 2}, %{a: 4, b: 5}], [:a])
+  [%{b: 2}, %{b: 5}]
+  
+  # with sub-lists of maps
+  iex> redrop(%{x: [%{a: 1, b: 2}, %{a: 4, b: 5}]}, [x: [:a]])
+  %{x: [%{b: 2}, %{b: 5}]}
+  """
+  def redrop(input, keys) when is_list(input) and is_list(keys) do
+    Enum.map(input, fn(map) -> redrop(map, keys) end)
+  end
+  
+  def redrop(input, keys) when is_map(input) and is_list(keys) do 
+    atoms = Enum.filter(keys, &(is_atom(&1)))
+    lists = Enum.filter(keys, &(is_tuple(&1)))
+    redrop(input, atoms, lists)
+  end
+
+  def redrop(_, _) do
+    %{}
+  end
+
+  defp redrop(input, keys, subkeys) when is_map(input) and 
+                                         is_list(keys) and 
+                                         is_list(subkeys) do
+    base = Map.drop(input, keys)
+    Enum.reduce(subkeys, base, fn(tuple, acc) -> 
+      {key, val} = tuple
+      subtree = Map.get(base, key)
+      if subtree do
+        submap = redrop(subtree, val)
+        Map.merge(acc, %{key => submap})
+      else
+        acc
+      end
+    end
+    )
+  end
+
+  @doc """
   Merges lists of maps.
 
   Examples:

@@ -131,6 +131,10 @@ defmodule Modex.AltMap do
   %{a: 1, b: 2}
 
   """
+  def merge_list([]) do
+    []
+  end
+
   def merge_list(list) when is_list(list) do
     [h | t] = list
     merge_list(h, t)
@@ -139,6 +143,10 @@ defmodule Modex.AltMap do
   def merge_list(map) when is_map(map) do
     map
   end
+
+  # def merge_list(fallback) do
+  #   fallback
+  # end
 
   @doc """
   Merges two lists of maps.

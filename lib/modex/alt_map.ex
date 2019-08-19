@@ -18,22 +18,18 @@ defmodule Modex.AltMap do
   Examples:
 
   # simple case works just like Map.take 
-  iex> import Modex.AltMap
   iex> retake(%{a: 1, b: 2}, [:a])
   %{a: 1}
   
   # with nested sub-maps
-  iex> import Modex.AltMap
   iex> retake(%{a: 1, b: 2, c: %{x: 1, y: 2}}, [:a, c: [:x]])
   %{a: 1, c: %{x: 1}}
   
   # with lists of maps
-  iex> import Modex.AltMap
   iex> retake([%{a: 1, b: 2}, %{a: 4, b: 5}], [:a])
   [%{a: 1}, %{a: 4}]
   
   # with sub-lists of maps
-  iex> import Modex.AltMap
   iex> retake(%{x: [%{a: 1, b: 2}, %{a: 4, b: 5}]}, [x: [:a]])
   %{x: [%{a: 1}, %{a: 4}]}
   """
@@ -63,5 +59,74 @@ defmodule Modex.AltMap do
         acc
       end
     end)
+  end
+
+  @doc """
+  Merges lists of maps.
+
+  Examples:
+
+  # simple case with one list of maps 
+  iex> merge_list([%{a: 1}, %{b: 2}])
+  %{a: 1, b: 2}
+
+  """
+  def merge_list(list) when is_list(list) do
+    [h | t] = list
+    merge_list(h, t)
+  end
+
+  def merge_list(map) when is_map(map) do
+    map
+  end
+
+  @doc """
+  Merges two lists of maps.
+
+  Examples:
+
+  # merge two lists
+  iex> merge_list([%{a: 1}], [%{b: 2}])
+  %{a: 1, b: 2}
+
+  # merge a map and a list
+  iex> merge_list(%{a: 1}, [%{b: 2}])
+  %{a: 1, b: 2}
+
+  # merge a list and a map
+  iex> merge_list([%{a: 1}], %{b: 2})
+  %{a: 1, b: 2}
+
+  """
+  def merge_list(map1, map2) when is_map(map1) and is_map(map2) do
+    Map.merge(map1, map2)
+  end
+
+  def merge_list([], []) do
+    %{}
+  end
+
+  def merge_list(map, []) when is_map(map) do
+    map
+  end
+
+  def merge_list([], map) when is_map(map) do
+    map
+  end
+
+  def merge_list(map, list) when is_map(map) and is_list(list) do
+    [h | t] = list
+    Map.merge(map, h)
+    |> merge_list(t)
+  end
+
+  def merge_list(list1, list2) when is_list(list1) and is_list(list2) do
+    Enum.concat(list1, list2)
+    |> merge_list()
+  end
+
+  def merge_list(list, map) when is_list(list) and is_map(map) do
+    Enum.concat(list, [map])
+    |> merge_list()
   end
 end

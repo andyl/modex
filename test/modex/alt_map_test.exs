@@ -1,6 +1,6 @@
 defmodule Modex.AltMapTest do
   use ExUnit.Case, async: true
-  doctest Modex.AltMap
+  doctest Modex.AltMap, import: true
 
   import Modex.AltMap
 

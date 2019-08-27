@@ -21,6 +21,14 @@ defmodule Modex.AltMap do
   iex> retake(%{a: 1, b: 2}, [:a])
   %{a: 1}
   
+  # works with string keys
+  iex> retake(%{"a" => 1, "b" => 2}, ["a"])
+  %{"a" => 1}
+  
+  # works with number keys
+  iex> retake(%{1 => "a", 2 => "b"}, [1])
+  %{1 => "a"}
+  
   # with nested sub-maps
   iex> retake(%{a: 1, b: 2, c: %{x: 1, y: 2}}, [:a, c: [:x]])
   %{a: 1, c: %{x: 1}}
@@ -38,9 +46,9 @@ defmodule Modex.AltMap do
   end
   
   def retake(input, keys) when is_map(input) and is_list(keys) do 
-    atoms = Enum.filter(keys, &(is_atom(&1)))
     lists = Enum.filter(keys, &(is_tuple(&1)))
-    retake(input, atoms, lists)
+    keys  = Enum.filter(keys, &(is_atom(&1) || is_binary(&1) || is_number(&1)))
+    retake(input, keys, lists)
   end
 
   def retake(_, _) do
